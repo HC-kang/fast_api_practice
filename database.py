@@ -10,18 +10,18 @@ from sqlalchemy.ext.declarative import declarative_base
 # )
 
 # --- postgresql
-# SQLALCHEMY_DATABASE_URL = "postgresql://postgres:root@localhost/ToDoApplicationDatabase"
-
-# engine = create_engine(
-#     SQLALCHEMY_DATABASE_URL
-# )
-
-# --- mysql
-SQLALCHEMY_DATABASE_URL = "mysql+pymysql://root:root@127.0.0.1:3306/ToDoApplicationDatabase"
+SQLALCHEMY_DATABASE_URL = "postgresql://postgres:root@localhost/ToDoApplicationDatabase"
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL
 )
+
+# --- mysql
+# SQLALCHEMY_DATABASE_URL = "mysql+pymysql://root:root@127.0.0.1:3306/ToDoApplicationDatabase"
+
+# engine = create_engine(
+#     SQLALCHEMY_DATABASE_URL
+# )
 
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
