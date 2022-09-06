@@ -192,3 +192,6 @@ cython_debug/
 
 FastAPI-The-Complete-Course-main/
 secrets.json
+ultimate-fastapi-tutorial/
+.ultimate-fastapi-tutorial/
+.ultimate-fastapi-tutorial/*
