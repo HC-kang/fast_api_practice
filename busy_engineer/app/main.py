@@ -1,4 +1,5 @@
 from fastapi import FastAPI, APIRouter
+from typing import Optional
 
 
 RECIPES = [
@@ -54,6 +55,28 @@ def fetch_recipe(*, recipe_id: int) -> dict:
     result = [recipe for recipe in RECIPES if recipe["id"] == recipe_id]
     if result:
         return result[0]
+
+
+@api_router.get("/search/", status_code=200)
+def search_recipes(
+    keyword: Optional[str] = None, max_results: Optional[int] = 10
+) -> dict:
+    """
+
+    Args:
+        keyword (Optional[str], optional): search keyword. Defaults to None.
+        max_results (Optional[int], optional): max_result. Defaults to 10.
+
+    Returns:
+        dict: recipes
+    """
+    if not keyword:
+        return {"result": RECIPES[:max_results]}
+
+    results = [recipe for recipe in RECIPES
+               if keyword.lower() in recipe["label"].lower()]
+    return {"result": results}
+    
 
 
 app.include_router(api_router)
