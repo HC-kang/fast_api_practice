@@ -1,27 +1,8 @@
 from fastapi import FastAPI, APIRouter
 from typing import Optional
 
-
-RECIPES = [
-    {
-        "id": 1,
-        "label": "Chicken Vesuvio",
-        "source": "Serious Eats",
-        "url": "http://www.seriouseats.com/recipes/2011/12/chicken-vesuvio-recipe.html",
-    },
-    {
-        "id": 2,
-        "label": "Chicken Paprikash",
-        "source": "No Recipes",
-        "url": "http://norecipes.com/recipe/chicken-paprikash/",
-    },
-    {
-        "id": 3,
-        "label": "Cauliflower and Tofu Curry Recipe",
-        "source": "Serious Eats",
-        "url": "http://www.seriouseats.com/recipes/2011/02/cauliflower-and-tofu-curry-recipe.html",
-    },
-]
+from .schemas import Recipe, RecipeCreate
+from .recipe_data import RECIPES
 
 
 app = FastAPI(title="Recipe API", openapi_url="/openapi.json")
@@ -76,7 +57,28 @@ def search_recipes(
     results = [recipe for recipe in RECIPES
                if keyword.lower() in recipe["label"].lower()]
     return {"result": results}
+
+
+@api_router.post("/recipe/", status_code=201, response_model=Recipe)
+def create_recipe(*, recipe_in: RecipeCreate) -> dict:
+    """
+
+    Args:
+        recipe_in (RecipeCreate): recipe - in memory only
+
+    Returns:
+        dict: recipe model
+    """
+    new_entry_id = len(RECIPES) + 1
+    recipe_entry = Recipe(
+        id = new_entry_id,
+        label = recipe_in.label,
+        source = recipe_in.source,
+        url = recipe_in.url,
+    )
+    RECIPES.append(recipe_entry.dict())
     
+    return recipe_entry
 
 
 app.include_router(api_router)
