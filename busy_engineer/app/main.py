@@ -95,15 +95,14 @@ def update_recipe(*, recipe_update: Recipe) -> dict:
     return updated_recipe
 
 
-@api_router.delete("/recipe", status_code=200)
-def delete_recipe(*, recipe_delete: Recipe) -> int:
-    deleted_id =recipe_delete.id
-    updated_recipe = [RECIPE for RECIPE in RECIPES if RECIPE['id'] == deleted_id]
+@api_router.delete("/recipe/{recipe_id}/", status_code=200)
+def delete_recipe(*, recipe_id: int) -> int:
+    updated_recipe = [RECIPE for RECIPE in RECIPES if RECIPE['id'] == recipe_id]
     if updated_recipe == []:
         return {"error": "not found"}
-    RECIPES.pop(deleted_id - 1)
+    RECIPES.pop(recipe_id - 1)
     
-    return deleted_id
+    return recipe_id
 
 
 app.include_router(api_router)
