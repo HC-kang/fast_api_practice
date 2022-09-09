@@ -81,6 +81,31 @@ def create_recipe(*, recipe_in: RecipeCreate) -> dict:
     return recipe_entry
 
 
+@api_router.put("/recipe", status_code=200)
+def update_recipe(*, recipe_update: Recipe) -> dict:
+    updated_recipe = [RECIPE for RECIPE in RECIPES if RECIPE['id'] == recipe_update.id]
+    if updated_recipe == []:
+        return {"error": "not found"}
+    updated_recipe = updated_recipe[0]
+    updated_recipe['label'] = recipe_update.label
+    updated_recipe["source"] = recipe_update.source
+    updated_recipe["url"] = recipe_update.url
+    RECIPES[recipe_update.id - 1] = updated_recipe
+    
+    return updated_recipe
+
+
+@api_router.delete("/recipe", status_code=200)
+def delete_recipe(*, recipe_delete: Recipe) -> int:
+    deleted_id =recipe_delete.id
+    updated_recipe = [RECIPE for RECIPE in RECIPES if RECIPE['id'] == deleted_id]
+    if updated_recipe == []:
+        return {"error": "not found"}
+    RECIPES.pop(deleted_id - 1)
+    
+    return deleted_id
+
+
 app.include_router(api_router)
 
 
