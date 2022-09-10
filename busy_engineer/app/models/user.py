@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Boolean
+from sqlalchemy import Integer, String, Column, Boolean
 from sqlalchemy.orm import relationship
 
 from app.db.base_class import Base
@@ -12,7 +12,7 @@ class User(Base):
     is_superuser = Column(Boolean, default=False)
     recipes = relationship(
         "Recipe",
-        cascade="all,delete_orphan",
+        cascade="all,delete-orphan",
         back_populates="submitter",
         uselist=True,
     )

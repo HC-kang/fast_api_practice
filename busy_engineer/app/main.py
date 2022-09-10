@@ -1,13 +1,16 @@
-from fastapi import FastAPI, APIRouter, HTTPException, Request
+from fastapi import FastAPI, APIRouter, HTTPException, Request, Query, Depends
 from fastapi.templating import Jinja2Templates
 
-from typing import Optional
+from typing import Optional, Any
 from pathlib import Path
+from sqlalchemy.orm import Session
 
-from .schemas import Recipe, RecipeCreate
-from .recipe_data import RECIPES
+from app.schemas.recipe import RecipeSearchResults, Recipe, RecipeCreate
+from app import deps
+from app import crud
 
 
+ROOT = Path(__file__).resolve().parent.parent
 BASE_PATH = Path(__file__).resolve().parent
 TEMPLATES = Jinja2Templates(directory=str(BASE_PATH / "templates"))
 
@@ -18,20 +21,28 @@ api_router = APIRouter()
 
 
 @api_router.get("/", status_code=200)
-def root(request: Request) -> dict:
+def root(
+        request: Request,
+        db: Session = Depends(deps.get_db),
+    ) -> dict:
     """Root
 
     Returns:
         "msg": "Hello!!"
     """
+    recipes = crud.recipe.get_multi(db=db, limit=10)
     return TEMPLATES.TemplateResponse(
         "index.html",
-        {"request": request, "recipes": RECIPES}
+        {"request": request, "recipes": recipes}
     )
 
 
-@api_router.get("/recipe/{recipe_id}", status_code=200)
-def fetch_recipe(*, recipe_id: int) -> dict:
+@api_router.get("/recipe/{recipe_id}", status_code=200, response_model=Recipe)
+def fetch_recipe(
+        *,
+        recipe_id: int,
+        db: Session = Depends(deps.get_db),
+    ) -> Any:
     """
 
     Args:
@@ -40,19 +51,22 @@ def fetch_recipe(*, recipe_id: int) -> dict:
     Returns:
         result: {results}
     """
-    result = [recipe for recipe in RECIPES if recipe["id"] == recipe_id]
+    result = crud.recipeget(db=db, id=recipe_id)
     if not result:
         raise HTTPException(
             status_code=404, detail=f"Recipe with ID {recipe_id} not found"
         )
          
-    return result[0]
+    return result
 
 
-@api_router.get("/search/", status_code=200)
+@api_router.get("/search/", status_code=200, response_model=RecipeSearchResults)
 def search_recipes(
-    keyword: Optional[str] = None, max_results: Optional[int] = 10
-) -> dict:
+        *,
+        keyword: Optional[str] = Query(None, min_length=3, example="chicken"),
+        max_results: Optional[int] = 10,
+        db: Session = Depends(deps.get_db)
+    ) -> dict:
     """
 
     Args:
@@ -62,16 +76,20 @@ def search_recipes(
     Returns:
         dict: recipes
     """
+    recipes = crud.recipe.get_multi(db=db, limit=max_results)
     if not keyword:
-        return {"result": RECIPES[:max_results]}
+        return {"result": recipes}
 
-    results = [recipe for recipe in RECIPES
-               if keyword.lower() in recipe["label"].lower()]
-    return {"result": results}
+    results = filter(lambda recipe: keyword.lower() in recipe.label.lower(), recipes)
+    return {"result": list(results)[:max_results]}
 
 
 @api_router.post("/recipe/", status_code=201, response_model=Recipe)
-def create_recipe(*, recipe_in: RecipeCreate) -> dict:
+def create_recipe(
+        *,
+        recipe_in: RecipeCreate,
+        db: Session = Depends(deps.get_db)
+    ) -> dict:
     """
 
     Args:
@@ -80,38 +98,30 @@ def create_recipe(*, recipe_in: RecipeCreate) -> dict:
     Returns:
         dict: recipe model
     """
-    new_entry_id = len(RECIPES) + 1
-    recipe_entry = Recipe(
-        id = new_entry_id,
-        label = recipe_in.label,
-        source = recipe_in.source,
-        url = recipe_in.url,
-    )
-    RECIPES.append(recipe_entry.dict())
+    recipe = crud.recipe.create(db=db, obj_in=recipe_in)
     
-    return recipe_entry
+    return recipe
 
 
 @api_router.put("/recipe", status_code=200)
-def update_recipe(*, recipe_update: Recipe) -> dict:
-    updated_recipe = [RECIPE for RECIPE in RECIPES if RECIPE['id'] == recipe_update.id]
-    if updated_recipe == []:
-        return {"error": "not found"}
-    updated_recipe = updated_recipe[0]
-    updated_recipe['label'] = recipe_update.label
-    updated_recipe["source"] = recipe_update.source
-    updated_recipe["url"] = recipe_update.url
-    RECIPES[recipe_update.id - 1] = updated_recipe
+def update_recipe(
+        *,
+        recipe_update: Recipe,
+        db: Session = Depends(deps.get_db)
+    ) -> dict:
+    recipe = crud.recipe.update(db=db, db_obj=Recipe, obj_in=recipe_update)
     
-    return updated_recipe
+    
+    return recipe
 
 
 @api_router.delete("/recipe/{recipe_id}/", status_code=200)
-def delete_recipe(*, recipe_id: int) -> int:
-    updated_recipe = [RECIPE for RECIPE in RECIPES if RECIPE['id'] == recipe_id]
-    if updated_recipe == []:
-        return {"error": "not found"}
-    RECIPES.pop(recipe_id - 1)
+def remove_recipe(
+        *,
+        recipe_id: int,
+        db: Session = Depends(deps.get_db)
+    ) -> int:
+    crud.recipe.remove(db=db, id=recipe_id)
     
     return recipe_id
 
