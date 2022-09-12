@@ -2,4 +2,7 @@
 # imported by Alembic
 from app.db.base_class import Base  # noqa
 from app.models.user import User  # noqa
-from app.models.recipe import Recipe  # noqa
+from app.models.branch import Branch  # noqa
+from app.models.group import Group  # noqa
+
+# from app.models.recipe import Recipe  # noqa

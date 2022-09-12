@@ -31,7 +31,7 @@ class Settings(BaseSettings):
 
     SQLALCHEMY_DATABASE_URI: Optional[
         str
-    ] = "mysql+pymysql://root:root@127.0.0.1:3306/did_test"
+    ] = "mysql+pymysql://root:root@127.0.0.1:3306/test_project"
     # SQLALCHEMY_DATABASE_URI: Optional[str] = "sqlite:///example.db"
     FIRST_SUPERUSER: EmailStr = "admin@recipeapi.com"
     FIRST_SUPERUSER_PW: str = "CHANGEME"
