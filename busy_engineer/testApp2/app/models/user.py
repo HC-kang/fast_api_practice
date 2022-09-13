@@ -22,8 +22,8 @@ class User(Base):
     free_point = Column(Integer, nullable=False, default=0)
     business_class = Column(String(256), nullable=True)
     business_name = Column(String(256), nullable=True)
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
-    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+    created_at = Column(DateTime(timezone=True), default=func.now())
+    updated_at = Column(DateTime(timezone=True), default=func.now())
     is_notification = Column(Boolean, default=False)
     business_president = Column(String(256), nullable=True)
     approve_status_flag = Column(

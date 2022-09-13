@@ -20,7 +20,6 @@ class UserBase(BaseModel):
     business_name: Optional[str] = None
     is_notification: bool = False
     business_president: Optional[str] = None
-    approve_status_flag: Enum = UserApproveStatusFlag.W
     
     is_superuser: bool = False
 
@@ -38,8 +37,6 @@ class UserUpdate(UserBase):
 
 class UserInDBBase(UserBase):
     id: Optional[int] = None
-    created_at: datetime
-    updated_at: datetime
 
     class Config:
         orm_mode = True
@@ -48,6 +45,9 @@ class UserInDBBase(UserBase):
 # Additional properties stored in DB but not returned by API
 class UserInDB(UserInDBBase):
     hashed_password: str
+    approve_status_flag: Enum = UserApproveStatusFlag.W
+    created_at: datetime
+    updated_at: datetime
 
 
 # Additional properties to return via API

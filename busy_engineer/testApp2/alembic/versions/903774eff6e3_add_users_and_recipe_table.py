@@ -1,8 +1,8 @@
 """Add users and recipe table
 
-Revision ID: 9d7f6ae090a0
+Revision ID: 903774eff6e3
 Revises: 
-Create Date: 2022-09-14 08:00:23.336301
+Create Date: 2022-09-14 08:22:46.336879
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '9d7f6ae090a0'
+revision = '903774eff6e3'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -30,7 +30,7 @@ def upgrade():
     sa.Column('free_point', sa.Integer(), nullable=False),
     sa.Column('business_class', sa.String(length=256), nullable=True),
     sa.Column('business_name', sa.String(length=256), nullable=True),
-    sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=True),
+    sa.Column('created_at', sa.DateTime(timezone=True), nullable=True),
     sa.Column('updated_at', sa.DateTime(timezone=True), nullable=True),
     sa.Column('is_notification', sa.Boolean(), nullable=True),
     sa.Column('business_president', sa.String(length=256), nullable=True),

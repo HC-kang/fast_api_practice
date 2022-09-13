@@ -63,3 +63,23 @@ def create_user_signup(
     user = crud.user.create(db=db, obj_in=user_in)
 
     return user
+
+
+@router.put("/me", status_code=201, response_model=schemas.User)
+def update_user(
+    *,
+    db: Session = Depends(deps.get_db),
+    current_user: User = Depends(deps.get_current_user),
+    user_in: schemas.user.UserUpdate,
+) -> Any:
+    
+    user = crud.user.get(db, id=user_in.id)
+    if not current_user.id == user.id:
+        raise HTTPException(
+            status_code=403,
+            detail="You can only modify yours."
+        )
+
+    updated_user = crud.user.update(db=db, db_obj=user, obj_in=user_in)
+    db.commit()
+    return updated_user
