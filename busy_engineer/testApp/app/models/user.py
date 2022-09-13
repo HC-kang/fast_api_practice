@@ -14,7 +14,6 @@ class User(Base):
     name = Column(String(256), nullable=False)
     uid = Column(String(256), nullable=False)
     password = Column(String(256), nullable=False)
-    name = Column(String(256), nullable=False)
     approve_status_flag = Column(
         Enum(UserApproveStatusFlag), default=UserApproveStatusFlag.W
     )
@@ -55,4 +54,4 @@ class User(Base):
         cascade="all,delete-orphan",
         back_populates="user",
     )
-    group = relationship("Group", back_populates="user", uselist=False)
+    # group = relationship("Group", back_populates="user", uselist=False)

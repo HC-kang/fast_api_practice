@@ -44,10 +44,12 @@ def init_db(db: Session) -> None:
         user = crud.user.get_by_email(db, email=settings.FIRST_SUPERUSER)
         if not user:
             user_in = schemas.UserCreate(
-                full_name="Initial Super User",
-                email=settings.FIRST_SUPERUSER,
-                is_superuser=True,
+                name="Initial Super User",
+                uid='admin',
                 password=settings.FIRST_SUPERUSER_PW,
+                email=settings.FIRST_SUPERUSER,
+                approve_status_flag=1,
+                # is_superuser=True,
             )
             user = crud.user.create(db, obj_in=user_in)  # noqa: F841
         else:
@@ -55,15 +57,15 @@ def init_db(db: Session) -> None:
                 "Skipping creating superuser. User with email "
                 f"{settings.FIRST_SUPERUSER} already exists. "
             )
-        if not user.recipes:
-            for recipe in RECIPES:
-                recipe_in = schemas.RecipeCreate(
-                    label=recipe["label"],
-                    source=recipe["source"],
-                    url=recipe["url"],
-                    submitter_id=user.id,
-                )
-                crud.recipe.create(db, obj_in=recipe_in)
+        # if not user.recipes:
+        #     for recipe in RECIPES:
+        #         recipe_in = schemas.RecipeCreate(
+        #             label=recipe["label"],
+        #             source=recipe["source"],
+        #             url=recipe["url"],
+        #             submitter_id=user.id,
+        #         )
+                # crud.recipe.create(db, obj_in=recipe_in)
     else:
         logger.warning(
             "Skipping creating superuser.  FIRST_SUPERUSER needs to be "

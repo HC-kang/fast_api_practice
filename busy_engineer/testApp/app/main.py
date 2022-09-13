@@ -14,7 +14,7 @@ BASE_PATH = Path(__file__).resolve().parent
 TEMPLATES = Jinja2Templates(directory=str(BASE_PATH / "templates"))
 
 root_router = APIRouter()
-app = FastAPI(title="Recipe API", openapi_url=f"{settings.API_V1_STR}/openapi.json")
+app = FastAPI(title="Branch API", openapi_url=f"{settings.API_V1_STR}/openapi.json")
 
 
 @root_router.get("/", status_code=200)
@@ -25,10 +25,10 @@ def root(
     """
     Root GET
     """
-    recipes = crud.recipe.get_multi(db=db, limit=10)
+    branches = crud.branch.get_multi(db=db, limit=10)
     return TEMPLATES.TemplateResponse(
         "index.html",
-        {"request": request, "recipes": recipes},
+        {"request": request, "branches": branches},
     )
 
 

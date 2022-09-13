@@ -15,6 +15,7 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
     def create(self, db: Session, *, obj_in: UserCreate) -> User:
         create_data = obj_in.dict()
         create_data.pop("password")
+        create_data = {'name': 'Initial Super User', 'uid': 'admin', 'password': 'CHANGEME', 'approve_status_flag': 'A', 'email': 'admin@recipeapi.com', 'phone': None, 'level': 1, 'role': 'novice', 'credit_point': 0, 'free_point': 0, 'business_class': None, 'business_name': None, 'updated_at': None, 'is_notification': 0, 'business_president': None}
         db_obj = User(**create_data)
         db_obj.hashed_password = get_password_hash(obj_in.password)
         db.add(db_obj)

@@ -20,7 +20,7 @@ class Branch(Base):
     __tablename__ = "branches"
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(256), nullable=False)
-    group_id = Column(Integer, ForeignKey("groups.id"), nullable=True)
+    # group_id = Column(Integer, ForeignKey("groups.id"), nullable=True)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
     region_depth1_id = Column(Integer, nullable=False)
     region_depth2_id = Column(Integer, nullable=False)
@@ -36,4 +36,4 @@ class Branch(Base):
     deleted_at = Column(DateTime(timezone=True), nullable=True)
 
     user = relationship("User", back_populates="branches")
-    group = relationship("Group", back_populates="branches")
+    # group = relationship("Group", back_populates="branches")

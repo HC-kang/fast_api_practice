@@ -113,35 +113,35 @@ async def remove_recipe(
     return recipe_id
 
 
-async def get_reddit_top_async(subreddit: str) -> list:
-    async with httpx.AsyncClient() as client:
-        response = await client.get(
-            f"https://www.reddit.com/r/{subreddit}/top.json?sort=top&t=day&limit=5",
-            headers={"User-agent": "recipe bot 0.1"},
-        )
+# async def get_reddit_top_async(subreddit: str) -> list:
+#     async with httpx.AsyncClient() as client:
+#         response = await client.get(
+#             f"https://www.reddit.com/r/{subreddit}/top.json?sort=top&t=day&limit=5",
+#             headers={"User-agent": "recipe bot 0.1"},
+#         )
 
-    subreddit_recipes = response.json()
-    subreddit_data = []
-    for entry in subreddit_recipes["data"]["children"]:
-        score = entry["data"]["score"]
-        title = entry["data"]["title"]
-        link = entry["data"]["url"]
-        subreddit_data.append(f"{str(score)}: {title} ({link})")
-    return subreddit_data
-
-
-@router.get("/ideas/async")
-async def fetch_ideas_async(
-    user: User = Depends(deps.get_current_active_superuser),
-) -> dict:
-    results = await asyncio.gather(
-        *[get_reddit_top_async(subreddit=subreddit) for subreddit in RECIPE_SUBREDDITS]
-    )
-    return dict(zip(RECIPE_SUBREDDITS, results))
+#     subreddit_recipes = response.json()
+#     subreddit_data = []
+#     for entry in subreddit_recipes["data"]["children"]:
+#         score = entry["data"]["score"]
+#         title = entry["data"]["title"]
+#         link = entry["data"]["url"]
+#         subreddit_data.append(f"{str(score)}: {title} ({link})")
+#     return subreddit_data
 
 
-@router.get("/ideas/")
-def fetch_ideas(reddit_client: RedditClient = Depends(deps.get_reddit_client)) -> dict:
-    return {
-        key: reddit_client.get_reddit_top(subreddit=key) for key in RECIPE_SUBREDDITS
-    }
+# @router.get("/ideas/async")
+# async def fetch_ideas_async(
+#     user: User = Depends(deps.get_current_active_superuser),
+# ) -> dict:
+#     results = await asyncio.gather(
+#         *[get_reddit_top_async(subreddit=subreddit) for subreddit in RECIPE_SUBREDDITS]
+#     )
+#     return dict(zip(RECIPE_SUBREDDITS, results))
+
+
+# @router.get("/ideas/")
+# def fetch_ideas(reddit_client: RedditClient = Depends(deps.get_reddit_client)) -> dict:
+#     return {
+#         key: reddit_client.get_reddit_top(subreddit=key) for key in RECIPE_SUBREDDITS
+#     }
