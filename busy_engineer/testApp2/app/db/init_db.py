@@ -9,24 +9,18 @@ from app.enums.user_approve_status_flag import UserApproveStatusFlag
 logger = logging.getLogger(__name__)
 
 
-RECIPES = [
+BRANCHES = [
     {
         "id": 1,
-        "label": "Chicken Vesuvio",
-        "source": "Serious Eats",
-        "url": "http://www.seriouseats.com/recipes/2011/12/chicken-vesuvio-recipe.html",
+        "name": "강남점",
     },
     {
         "id": 2,
-        "label": "Chicken Paprikash",
-        "source": "No Recipes",
-        "url": "http://norecipes.com/recipe/chicken-paprikash/",
+        "name": "신림점",
     },
     {
         "id": 3,
-        "label": "Cauliflower and Tofu Curry Recipe",
-        "source": "Serious Eats",
-        "url": "http://www.seriouseats.com/recipes/2011/02/cauliflower-and-tofu-curry-recipe.html",  # noqa
+        "name": "부천점",
     },
 ]
 
@@ -66,15 +60,13 @@ def init_db(db: Session) -> None:
                 "Skipping creating superuser. User with email "
                 f"{settings.FIRST_SUPERUSER} already exists. "
             )
-        if not user.recipes:
-            for recipe in RECIPES:
-                recipe_in = schemas.RecipeCreate(
-                    label=recipe["label"],
-                    source=recipe["source"],
-                    url=recipe["url"],
-                    submitter_id=user.id,
+        if not user.branches:
+            for branch in BRANCHES:
+                branch_in = schemas.BranchCreate(
+                    name=branch["name"],
+                    user_id=user.id,
                 )
-                crud.recipe.create(db, obj_in=recipe_in)
+                crud.branch.create(db, obj_in=branch_in)
     else:
         logger.warning(
             "Skipping creating superuser.  FIRST_SUPERUSER needs to be "

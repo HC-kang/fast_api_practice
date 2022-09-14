@@ -11,15 +11,15 @@
                     Recipes - Better than all the REST
                 </h1>
                     <p class="text-base leading-relaxed">
-                        Latest recipes...</p>
+                        Latest branches...</p>
             </div>
-            {% for recipe in recipes %}
+            {% for branch in branches %}
                 <div
                     class="flex flex-wrap items-end justify-start w-full transition duration-500 ease-in-out transform bg-black border-2 border-gray-600 rounded-lg hover:border-white ">
                     <div class="w-full xl:w-1/4 md:w-1/4">
                         <div class="relative flex flex-col h-full p-8 ">
                             <h2 class="mb-4 font-semibold tracking-widest text-white uppercase title-font">
-                                {{recipe.label}}
+                                {{branch.name}}
                             </h2>
                             <p class="flex items-center mb-2 text-lg font-normal tracking-wide text-white">
                                 <span
@@ -28,7 +28,7 @@
                                         stroke-linejoin="round" stroke-width="2.5" class="w-4 h-4" viewBox="0 0 24 24">
                                         <path d="M20 6L9 17l-5-5"></path>
                                     </svg>
-                                </span>{{recipe.source}}
+                                </span>{{branch.name}}
                             </p>
                         </div>
                     </div>

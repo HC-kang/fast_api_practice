@@ -1,2 +1,2 @@
-from .recipe import Recipe, RecipeCreate, RecipeUpdateRestricted, RecipeUpdate
+from .branch import Branch, BranchCreate, BranchUpdate
 from .user import User, UserCreate

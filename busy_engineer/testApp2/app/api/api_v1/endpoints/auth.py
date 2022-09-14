@@ -21,12 +21,12 @@ def login(
     db: Session = Depends(deps.get_db), form_data: OAuth2PasswordRequestForm = Depends()
 ) -> Any:
     """
-    Get the JWT for a user with data from OAuth2 request form body.
+    OAuth2 리퀘스트를 통해 개인을 위한 JWT 토큰을 발행합니다.
     """
 
     user = authenticate(email=form_data.username, password=form_data.password, db=db)
     if not user:
-        raise HTTPException(status_code=400, detail="Incorrect username or password")
+        raise HTTPException(status_code=400, detail="계정 정보를 확인 해 주세요.")
 
     return {
         "access_token": create_access_token(sub=user.id),
@@ -37,7 +37,7 @@ def login(
 @router.get("/me", response_model=schemas.User)
 def read_users_me(current_user: User = Depends(deps.get_current_user)):
     """
-    Fetch the current logged in user.
+    현재 로그인한 계정의 정보를 가져옵니다.
     """
 
     user = current_user

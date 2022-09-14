@@ -31,9 +31,9 @@ class User(Base):
     )
     is_superuser = Column(Boolean, default=False)
 
-    recipes = relationship(
-        "Recipe",
+    branches = relationship(
+        "Branch",
         cascade="all,delete-orphan",
-        back_populates="submitter",
+        back_populates="user",
         uselist=True,
     )

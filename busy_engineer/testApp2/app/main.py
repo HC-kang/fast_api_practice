@@ -25,10 +25,10 @@ def root(
     """
     Root GET
     """
-    recipes = crud.recipe.get_multi(db=db, limit=10)
+    branches = crud.branch.get_multi(db=db, limit=10)
     return TEMPLATES.TemplateResponse(
         "index.html",
-        {"request": request, "recipes": recipes},
+        {"request": request, "branches": branches},
     )
 
 
