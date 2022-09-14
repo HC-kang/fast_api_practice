@@ -1,8 +1,8 @@
 """Add users and branches table
 
-Revision ID: 234ae692524a
+Revision ID: 552ae88759ac
 Revises: 
-Create Date: 2022-09-14 23:03:33.031630
+Create Date: 2022-09-15 07:51:01.793929
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '234ae692524a'
+revision = '552ae88759ac'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -44,6 +44,16 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=256), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=True),
+    sa.Column('region_depth1_id', sa.Integer(), nullable=False),
+    sa.Column('region_depth2_id', sa.Integer(), nullable=False),
+    sa.Column('category', sa.Enum('CVS', name='branchcategorytype'), nullable=True),
+    sa.Column('company_code', sa.Enum('CU', 'GS25', name='branchcompanycode'), nullable=True),
+    sa.Column('schedule_open_at', sa.Time(), nullable=False),
+    sa.Column('schedule_close_at', sa.Time(), nullable=False),
+    sa.Column('is_active', sa.Boolean(), nullable=False),
+    sa.Column('created_at', sa.DateTime(timezone=True), nullable=False),
+    sa.Column('updated_at', sa.DateTime(timezone=True), nullable=False),
+    sa.Column('deleted_at', sa.DateTime(timezone=True), nullable=True),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )

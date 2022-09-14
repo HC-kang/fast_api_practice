@@ -13,14 +13,32 @@ BRANCHES = [
     {
         "id": 1,
         "name": "강남점",
+        "region_depth1_id": 1,
+        "region_depth2_id": 1,
+        "category": 0,
+        "company_code": 0,
+        "schedule_open_at": "09:00",
+        "schedule_close_at": "21:00",
     },
     {
         "id": 2,
         "name": "신림점",
+        "region_depth1_id": 2,
+        "region_depth2_id": 2,
+        "category": 0,
+        "company_code": 0,
+        "schedule_open_at": "08:00",
+        "schedule_close_at": "20:00",
     },
     {
         "id": 3,
         "name": "부천점",
+        "region_depth1_id": 3,
+        "region_depth2_id": 3,
+        "category": 0,
+        "company_code": 1,
+        "schedule_open_at": "10:00",
+        "schedule_close_at": "22:00",
     },
 ]
 
@@ -65,6 +83,12 @@ def init_db(db: Session) -> None:
                 branch_in = schemas.BranchCreate(
                     name=branch["name"],
                     user_id=user.id,
+                    region_depth1_id=branch["region_depth1_id"],
+                    region_depth2_id=branch["region_depth2_id"],
+                    category=branch["category"],
+                    company_code=branch["company_code"],
+                    schedule_open_at=branch["schedule_open_at"],
+                    schedule_close_at=branch["schedule_close_at"],
                 )
                 crud.branch.create(db, obj_in=branch_in)
     else:

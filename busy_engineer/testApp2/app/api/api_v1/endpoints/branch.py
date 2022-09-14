@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 
 from app import crud
 from app.api import deps
-from app.clients.reddit import RedditClient
+# from app.clients.reddit import RedditClient
 from app.schemas.branch import (
     Branch,
     BranchCreate,
@@ -41,7 +41,7 @@ def fetch_branch(
 @router.get("/search/", status_code=200, response_model=BranchSearchResults)
 def search_branches(
     *,
-    keyword: str = Query(None, min_length=1, example="강남"),
+    keyword: str = Query(None, min_length=1, example="점"),
     max_results: Optional[int] = 10,
     db: Session = Depends(deps.get_db),
 ) -> dict:
