@@ -48,18 +48,16 @@ def init_db(db: Session) -> None:
                 name="Ford",
                 password=settings.FIRST_SUPERUSER_PW,
                 email=settings.FIRST_SUPERUSER,
-                
-                phone='010-0000-0000',
+                phone="010-0000-0000",
                 level=10,
-                role='admin',
+                role="admin",
                 credit_point=100_000_000,
                 free_point=100_000_000,
-                business_class='business_class',
-                business_name='business_name',
+                business_class="business_class",
+                business_name="business_name",
                 is_notification=True,
                 business_president="ford",
                 approve_status_flag=UserApproveStatusFlag.A,
-                
                 is_superuser=True,
             )
             user = crud.user.create(db, obj_in=user_in)  # noqa: F841

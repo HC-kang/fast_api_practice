@@ -7,14 +7,14 @@ from app.enums.user_approve_status_flag import UserApproveStatusFlag
 
 
 class User(Base):
-    
+
     __tablename__ = "users"
-    
+
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(256), nullable=True)
     hashed_password = Column(String(256), nullable=False)
     email = Column(String(256), index=True, nullable=False)
-    
+
     phone = Column(String(256), nullable=True)
     level = Column(Integer, nullable=False)
     role = Column(String(20), nullable=False)
@@ -30,7 +30,7 @@ class User(Base):
         Enum(UserApproveStatusFlag), default=UserApproveStatusFlag.W
     )
     is_superuser = Column(Boolean, default=False)
-    
+
     recipes = relationship(
         "Recipe",
         cascade="all,delete-orphan",

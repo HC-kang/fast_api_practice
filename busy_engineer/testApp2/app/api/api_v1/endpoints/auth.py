@@ -50,15 +50,12 @@ def create_user_signup(
     db: Session = Depends(deps.get_db),
     user_in: schemas.user.UserCreate,
 ) -> Any:
-    """
-    Create new user without the need to be logged in.
-    """
 
     user = db.query(User).filter(User.email == user_in.email).first()
     if user:
         raise HTTPException(
             status_code=400,
-            detail="The user with this email already exists in the system",
+            detail="이미 사용중인 이메일입니다.",
         )
     user = crud.user.create(db=db, obj_in=user_in)
 
@@ -72,13 +69,13 @@ def update_user(
     current_user: User = Depends(deps.get_current_user),
     user_in: schemas.user.UserUpdate,
 ) -> Any:
-    
+
     user = crud.user.get(db, id=user_in.id)
+
+    if not user:
+        raise HTTPException(status_code=404, detail="해당하는 유저를 찾을 수 없습니다.")
     if not current_user.id == user.id:
-        raise HTTPException(
-            status_code=403,
-            detail="You can only modify yours."
-        )
+        raise HTTPException(status_code=403, detail="본인의 계정 정보만 수정 할 수 있습니다.")
 
     updated_user = crud.user.update(db=db, db_obj=user, obj_in=user_in)
     db.commit()

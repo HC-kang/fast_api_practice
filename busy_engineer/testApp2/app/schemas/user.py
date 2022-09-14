@@ -10,17 +10,17 @@ from app.enums.user_approve_status_flag import UserApproveStatusFlag
 class UserBase(BaseModel):
     name: Optional[str] = None
     email: Optional[EmailStr] = None
-    
+
     phone: Optional[str] = None
     level: int = 1
-    role: str = 'novice'
+    role: str = "novice"
     credit_point: int = 0
     free_point: int = 0
     business_class: Optional[str] = None
     business_name: Optional[str] = None
     is_notification: bool = False
     business_president: Optional[str] = None
-    
+
     is_superuser: bool = False
 
 
@@ -36,7 +36,7 @@ class UserUpdate(UserBase):
 
 
 class UserInDBBase(UserBase):
-    id: Optional[int] = None
+    id: int
 
     class Config:
         orm_mode = True
