@@ -4,7 +4,6 @@ from datetime import time, datetime
 from typing import Sequence, Optional
 
 from app.enums.branch_category_type import BranchCategoryType
-from app.enums.branch_company_code import BranchCompanyCode
 
 
 class BranchBase(BaseModel):
@@ -13,7 +12,6 @@ class BranchBase(BaseModel):
     region_depth1_id: int
     region_depth2_id: int
     category: "BranchCategoryType"
-    company_code: "BranchCompanyCode"
     schedule_open_at: time
     schedule_close_at: time
 

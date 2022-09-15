@@ -64,11 +64,31 @@ def create_branch(
     """
     if branch_in.user_id != current_user.id:
         raise HTTPException(
-            status_code=403, detail=f"You can only submit branches as yourself"
+            status_code=403, detail="본인의 계정으로만 지점을 등록 할 수 있습니다."
         )
     branch = crud.branch.create(db=db, obj_in=branch_in)
 
     return branch
+
+
+@router.delete("/{branch_id}", status_code=200, response_model=int)
+def delete_branch(
+    *,
+    branch_id: int,
+    db: Session = Depends(deps.get_db),
+    current_user: User = Depends(deps.get_current_user),
+) -> int:
+    branch = crud.branch.get(db=db, id=branch_id)
+    if not branch:
+        raise HTTPException(
+            status_code=400, detail=f"{branch_id}번 브랜치를 찾을수 없습니다."
+        )
+    if branch.user_id != current_user.id:
+        raise HTTPException(
+            status_code=403, detail="본인 소유의 지점만 삭제 할 수 있습니다."
+        )
+    crud.branch.remove(db=db, id=branch_id)
+    return branch_id
 
 
 @router.put("/", status_code=201, response_model=Branch)
@@ -82,7 +102,7 @@ def update_branch(
     branch = crud.branch.get(db, id=branch_in.id)
     if not branch:
         raise HTTPException(
-            status_code=400, detail=f"Branch with ID: {branch_in.id} not found."
+            status_code=400, detail=f"{branch_in.id}번 브랜치를 찾을수 없습니다."
         )
 
     if branch.user_id != current_user.id:

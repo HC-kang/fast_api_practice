@@ -1,8 +1,8 @@
 """Add users and branches table
 
-Revision ID: 552ae88759ac
+Revision ID: cbe246512b4c
 Revises: 
-Create Date: 2022-09-15 07:51:01.793929
+Create Date: 2022-09-16 08:17:36.729879
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '552ae88759ac'
+revision = 'cbe246512b4c'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -25,17 +25,15 @@ def upgrade():
     sa.Column('email', sa.String(length=256), nullable=False),
     sa.Column('phone', sa.String(length=256), nullable=True),
     sa.Column('level', sa.Integer(), nullable=False),
-    sa.Column('role', sa.String(length=20), nullable=False),
-    sa.Column('credit_point', sa.Integer(), nullable=False),
-    sa.Column('free_point', sa.Integer(), nullable=False),
+    sa.Column('point', sa.Integer(), nullable=False),
     sa.Column('business_class', sa.String(length=256), nullable=True),
     sa.Column('business_name', sa.String(length=256), nullable=True),
-    sa.Column('created_at', sa.DateTime(timezone=True), nullable=True),
-    sa.Column('updated_at', sa.DateTime(timezone=True), nullable=True),
-    sa.Column('is_notification', sa.Boolean(), nullable=True),
     sa.Column('business_president', sa.String(length=256), nullable=True),
+    sa.Column('is_notification', sa.Boolean(), nullable=True),
     sa.Column('approve_status_flag', sa.Enum('W', 'A', 'D', 'S', name='userapprovestatusflag'), nullable=True),
     sa.Column('is_superuser', sa.Boolean(), nullable=True),
+    sa.Column('created_at', sa.DateTime(timezone=True), nullable=True),
+    sa.Column('updated_at', sa.DateTime(timezone=True), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_users_email'), 'users', ['email'], unique=False)
@@ -47,13 +45,12 @@ def upgrade():
     sa.Column('region_depth1_id', sa.Integer(), nullable=False),
     sa.Column('region_depth2_id', sa.Integer(), nullable=False),
     sa.Column('category', sa.Enum('CVS', name='branchcategorytype'), nullable=True),
-    sa.Column('company_code', sa.Enum('CU', 'GS25', name='branchcompanycode'), nullable=True),
     sa.Column('schedule_open_at', sa.Time(), nullable=False),
     sa.Column('schedule_close_at', sa.Time(), nullable=False),
     sa.Column('is_active', sa.Boolean(), nullable=False),
+    sa.Column('deleted_at', sa.DateTime(timezone=True), nullable=True),
     sa.Column('created_at', sa.DateTime(timezone=True), nullable=False),
     sa.Column('updated_at', sa.DateTime(timezone=True), nullable=False),
-    sa.Column('deleted_at', sa.DateTime(timezone=True), nullable=True),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )

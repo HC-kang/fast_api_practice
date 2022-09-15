@@ -13,13 +13,11 @@ class UserBase(BaseModel):
 
     phone: Optional[str] = None
     level: int = 1
-    role: str = "novice"
-    credit_point: int = 0
-    free_point: int = 0
+    point: int = 0
     business_class: Optional[str] = None
     business_name: Optional[str] = None
-    is_notification: bool = False
     business_president: Optional[str] = None
+    is_notification: bool = False
 
     is_superuser: bool = False
 
